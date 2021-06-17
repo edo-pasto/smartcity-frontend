@@ -32,6 +32,42 @@ const routes = [
         name: 'product',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Product.vue')
       },
+      {
+        path: '/code',
+        name: 'code',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Code.vue')
+      },
+      {
+        path: '/partner',
+        name: 'partner',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Partner.vue')
+      },
+      {
+        path: '/customer',
+        name: 'customer',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Customer.vue')
+      },
+      {
+        path: '/order',
+        name: 'order',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Order.vue')
+      },
+      {
+        path: '/task',
+        name: 'task',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Task.vue')
+      },
+      {
+        path: '/device',
+        name: 'device',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Device.vue')
+      },
+      {
+        path: '/registerDevice',
+        name: 'registerDevice',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/RegisterDevice.vue')
+      },
+
       //task attivi
             //device attivi per specifico task
             //registrare device per task manager

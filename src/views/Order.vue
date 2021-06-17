@@ -1,3 +1,4 @@
+
 <template>
 <div>
 
@@ -77,7 +78,7 @@
         <div class="col">
           <div class="card shadow">
             <div class="card-header bg-transparent">
-              <h3 class="mb-0">Product</h3>
+              <h3 class="mb-0">Order</h3>
             </div>
             <div class="card-body">
               <div v-if="success" class="col-lg-12 mb-2">
@@ -210,10 +211,11 @@
                       :aria-describedby="ariaDescribedby"
                       class="mt-1"
                     >
-                      <b-form-checkbox value="code">name</b-form-checkbox>
-                      <b-form-checkbox value="activation">decription</b-form-checkbox>
-                      <b-form-checkbox value="deadline">cost</b-form-checkbox>
-                      <b-form-checkbox value="assigned">partner</b-form-checkbox>
+                      <b-form-checkbox value="partner">partner</b-form-checkbox>
+                      <b-form-checkbox value="customer">customer</b-form-checkbox>
+                      <b-form-checkbox value="product">product</b-form-checkbox>
+                      <b-form-checkbox value="code">code</b-form-checkbox>
+                      <b-form-checkbox value="placedOn">placed on</b-form-checkbox>
                     </b-form-checkbox-group>
                   </b-form-group>
                 </b-col>
@@ -242,7 +244,7 @@
                 <b-table
                   style="background-color: white"
                   hover
-                  :items="products"
+                  :items="orders"
                   :fields="fields"
                   :current-page="currentPage"
                   :per-page="perPage"
@@ -278,18 +280,13 @@
                       </form>
                       <b-form class="ml-2">
                         <b-button
-                          v-b-modal="`modalUpdateProduct${data.item.id}`"
+                          v-b-modal="`modalUpdateOrder${data.item.id}`"
                           @click="showModal2[index]= true"
                           class="btn btn-primary"
                           :id="'mod' + data.item.id"
                           >Modifica</b-button
                         >
                       </b-form>
-
-                    <!-- bottone riferimento ai codici del prodotto -->
-                    <a href="/#/code">
-                      <b-button class="btn btn-primary">Codes</b-button>
-                    </a>
                     </div>
                   </template>
                 </b-table>
@@ -305,53 +302,15 @@
                   ></b-pagination>
                 </b-col>
             </b-row>
-            <div v-for="(product, index) in products" :key="product.id">
+            <!-- <div v-for="(order, index) in orders" :key="order.id">
                 <b-modal
-                  :id="`modalUpdateProduct${product.id}`"
+                  :id="`modalUpdateOrder${order.id}`"
                   title="Modifica Prodotto"
                   hide-footer
                   v-model="showModal2[index]"
                 >
-                  <b-form ref="form" @submit.prevent="submitUpdate(product.id, index)">
-                    <b-form-group
-                      label="Cambia Nome prodotto"
-                      label-for="name-input"
-                      invalid-feedback="Nome prodotto is required"
-                    >
-                      <b-form-input
-                        id="name-input"
-                        name="name"
-                        v-model="requestFields.name"
-                        type="text"
-                        required
-                      ></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Cambia Descrizione prodotto"
-                      label-for="description-input"
-                      invalid-feedback="Descrizione prodotto is required"
-                    >
-                      <b-form-input
-                        id="description-input"
-                        name="description"
-                        v-model="requestFields.description"
-                        type="text"
-                        required
-                      ></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                      label="Cambia Costo prodotto"
-                      label-for="cost-input"
-                      invalid-feedback="Costo prodotto is required"
-                    >
-                      <b-form-input
-                        id="cost-input"
-                        name="cost"
-                        v-model="requestFields.cost"
-                        type="number"
-                        required
-                      ></b-form-input>
-                    </b-form-group>
+                  <b-form ref="form" @submit.prevent="submitUpdate(order.id, index)">
+                   
                     <b-button
                       type="submit"
                       class="btn btn-primary waves-effect waves-light m-r-5"
@@ -367,7 +326,7 @@
                   </b-form>
                 </b-modal>
 
-              </div>
+              </div> -->
             
           </div>
         </div>
@@ -391,33 +350,40 @@ export default {
       success: false,
       loaded: true,
       errors: false,
-      products: [],
+      orders: [],
       items: [],
       fields: [
         {
-          key: "name",
-          label: "Name",
+          key: "partner",
+          label: "Partner",
           sortable: true,
           sortDirection: "desc",
         },
         {
-          key: "description",
-          label: "Description",
+          key: "customer",
+          label: "Customer",
           sortable: true,
           class: "text-center",
         },
         {
-          key: "cost",
-          label: "Cost",
+          key: "product",
+          label: "Product",
           sortable: true,
           class: "text-center",
         },
         {
-          key: "Partner Id",
-          label: "partner",
+          key: "code",
+          label: "Code",
           sortable: true,
-          sortDirection: "desc",
+          class: "text-center",
         },
+        {
+          key: "placedOn",
+          label: "Placed On",
+          sortable: true,
+          class: "text-center",
+        },
+        
 
         { key: "actions", label: "Actions" },
       ],
@@ -448,9 +414,9 @@ export default {
     },
   },
   mounted() {
-    axios.get("http://api-gateway.smartcity-uniupo.link/api/product").then((response) => {
-      this.products = response.data;
-      this.totalRows = this.products.length;
+    axios.get("http://api-gateway.smartcity-uniupo.link/api/order/").then((response) => {
+      this.orders = response.data;
+      this.totalRows = this.orders.length;
     });
     // Set the initial number of items
   },
@@ -479,8 +445,8 @@ export default {
             this.success = "MESSAGGIO: Modificato " + response.data;
             Vue.set(this.showModal2, index, false);
             axios.get("http://localhost/stage/public/api/home/getCode").then((response) => {
-              this.products = response.data;
-              this.totalRows = this.products.length;
+              this.orders = response.data;
+              this.totalRows = this.orders.length;
             });
           })
           .catch((error) => {
@@ -503,8 +469,8 @@ export default {
             Vue.set(this.isLoading, index, false);
             this.success = "MESSAGGIO: " + response.data;
             axios.get("http://localhost/stage/public/api/home/getCode").then((response) => {
-              this.products = response.data;
-              this.totalRows = this.products.length;
+              this.orders = response.data;
+              this.totalRows = this.orders.length;
               this.isLoading = false;
             });
           })

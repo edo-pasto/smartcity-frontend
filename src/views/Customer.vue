@@ -77,7 +77,7 @@
         <div class="col">
           <div class="card shadow">
             <div class="card-header bg-transparent">
-              <h3 class="mb-0">Product</h3>
+              <h3 class="mb-0">Customer</h3>
             </div>
             <div class="card-body">
               <div v-if="success" class="col-lg-12 mb-2">
@@ -210,10 +210,13 @@
                       :aria-describedby="ariaDescribedby"
                       class="mt-1"
                     >
-                      <b-form-checkbox value="code">name</b-form-checkbox>
-                      <b-form-checkbox value="activation">decription</b-form-checkbox>
-                      <b-form-checkbox value="deadline">cost</b-form-checkbox>
-                      <b-form-checkbox value="assigned">partner</b-form-checkbox>
+                      <b-form-checkbox value="name">Name</b-form-checkbox>
+                      <b-form-checkbox value="surname">Surname</b-form-checkbox>
+                      <b-form-checkbox value="username">UserName</b-form-checkbox>
+                      <b-form-checkbox value="ecoPoint">Eco points</b-form-checkbox>
+                      <b-form-checkbox value="address">Address</b-form-checkbox>
+                      <b-form-checkbox value="phone">Phone</b-form-checkbox>
+                      <b-form-checkbox value="dob">Date of birth</b-form-checkbox>
                     </b-form-checkbox-group>
                   </b-form-group>
                 </b-col>
@@ -242,7 +245,7 @@
                 <b-table
                   style="background-color: white"
                   hover
-                  :items="products"
+                  :items="customers"
                   :fields="fields"
                   :current-page="currentPage"
                   :per-page="perPage"
@@ -278,18 +281,13 @@
                       </form>
                       <b-form class="ml-2">
                         <b-button
-                          v-b-modal="`modalUpdateProduct${data.item.id}`"
+                          v-b-modal="`modalUpdateCustomer${data.item.id}`"
                           @click="showModal2[index]= true"
                           class="btn btn-primary"
                           :id="'mod' + data.item.id"
                           >Modifica</b-button
                         >
                       </b-form>
-
-                    <!-- bottone riferimento ai codici del prodotto -->
-                    <a href="/#/code">
-                      <b-button class="btn btn-primary">Codes</b-button>
-                    </a>
                     </div>
                   </template>
                 </b-table>
@@ -305,18 +303,18 @@
                   ></b-pagination>
                 </b-col>
             </b-row>
-            <div v-for="(product, index) in products" :key="product.id">
+            <div v-for="(customer, index) in customers" :key="customer.id">
                 <b-modal
-                  :id="`modalUpdateProduct${product.id}`"
-                  title="Modifica Prodotto"
+                  :id="`modalUpdateCustomer${customer.id}`"
+                  title="Update Customer"
                   hide-footer
                   v-model="showModal2[index]"
                 >
-                  <b-form ref="form" @submit.prevent="submitUpdate(product.id, index)">
+                  <b-form ref="form" @submit.prevent="submitUpdate(customer.id, index)">
                     <b-form-group
-                      label="Cambia Nome prodotto"
+                      label="Change Name"
                       label-for="name-input"
-                      invalid-feedback="Nome prodotto is required"
+                      invalid-feedback="Name of Customer is required"
                     >
                       <b-form-input
                         id="name-input"
@@ -327,28 +325,67 @@
                       ></b-form-input>
                     </b-form-group>
                     <b-form-group
-                      label="Cambia Descrizione prodotto"
-                      label-for="description-input"
-                      invalid-feedback="Descrizione prodotto is required"
+                      label="Change Surname"
+                      label-for="surname-input"
+                      invalid-feedback="Surnme of Customer is required"
                     >
                       <b-form-input
-                        id="description-input"
-                        name="description"
-                        v-model="requestFields.description"
+                        id="surname-input"
+                        name="surname"
+                        v-model="requestFields.surname"
                         type="text"
                         required
                       ></b-form-input>
                     </b-form-group>
                     <b-form-group
-                      label="Cambia Costo prodotto"
-                      label-for="cost-input"
-                      invalid-feedback="Costo prodotto is required"
+                      label="Change Username"
+                      label-for="username-input"
+                      invalid-feedback="Username of Customer is required"
                     >
                       <b-form-input
-                        id="cost-input"
-                        name="cost"
-                        v-model="requestFields.cost"
-                        type="number"
+                        id="username-input"
+                        name="username"
+                        v-model="requestFields.username"
+                        type="text"
+                        required
+                      ></b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                      label="Change Address"
+                      label-for="address-input"
+                      invalid-feedback="Address of Customer is required"
+                    >
+                      <b-form-input
+                        id="address-input"
+                        name="address"
+                        v-model="requestFields.address"
+                        type="text"
+                        required
+                      ></b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                      label="Change Phone"
+                      label-for="phone-input"
+                      invalid-feedback="Phone of Customer is required"
+                    >
+                      <b-form-input
+                        id="phone-input"
+                        name="phone"
+                        v-model="requestFields.phone"
+                        type="text"
+                        required
+                      ></b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                      label="Change Date Of Birth"
+                      label-for="dob-input"
+                      invalid-feedback="Date Of Birth of Customer is required"
+                    >
+                      <b-form-input
+                        id="dob-input"
+                        name="dob"
+                        v-model="requestFields.dob"
+                        type="date"
                         required
                       ></b-form-input>
                     </b-form-group>
@@ -391,7 +428,7 @@ export default {
       success: false,
       loaded: true,
       errors: false,
-      products: [],
+      customers: [],
       items: [],
       fields: [
         {
@@ -401,23 +438,43 @@ export default {
           sortDirection: "desc",
         },
         {
-          key: "description",
-          label: "Description",
+          key: "surname",
+          label: "Surname",
           sortable: true,
           class: "text-center",
         },
         {
-          key: "cost",
-          label: "Cost",
+          key: "username",
+          label: "UserName",
           sortable: true,
           class: "text-center",
         },
         {
-          key: "Partner Id",
-          label: "partner",
+          key: "ecoPoint",
+          label: "Eco Points",
           sortable: true,
-          sortDirection: "desc",
+          class: "text-center",
         },
+        
+        {
+          key: "address",
+          label: "Address",
+          sortable: true,
+          class: "text-center",
+        },
+        {
+          key: "phone",
+          label: "Phone",
+          sortable: true,
+          class: "text-center",
+        },
+        {
+          key: "dob",
+          label: "Date Of Birth",
+          sortable: true,
+          class: "text-center",
+        },
+        
 
         { key: "actions", label: "Actions" },
       ],
@@ -448,9 +505,9 @@ export default {
     },
   },
   mounted() {
-    axios.get("http://api-gateway.smartcity-uniupo.link/api/product").then((response) => {
-      this.products = response.data;
-      this.totalRows = this.products.length;
+    axios.get("http://api-gateway.smartcity-uniupo.link/api/user/customer").then((response) => {
+      this.customers = response.data;
+      this.totalRows = this.customers.length;
     });
     // Set the initial number of items
   },
@@ -463,59 +520,59 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    async submitUpdate(id, index) {
-      if (this.loaded) {
-        this.loaded = false;
-        this.success = false;
-        this.errors = false;
-        await axios
-          .put(
-            `http://localhost/stage/public/api/home/listCode/update/${id}`,
-            this.requestFields
-          )
-          .then((response) => {
-            this.requestFields = {};
-            this.loaded = true;
-            this.success = "MESSAGGIO: Modificato " + response.data;
-            Vue.set(this.showModal2, index, false);
-            axios.get("http://localhost/stage/public/api/home/getCode").then((response) => {
-              this.products = response.data;
-              this.totalRows = this.products.length;
-            });
-          })
-          .catch((error) => {
-            this.loaded = true;
-            this.status = false;
-            this.showModal2 = false;
-            this.errors = error.response.data.message;
-          });
-      }
-    },
-    async submitDelete(id, index) {
-      if (this.loaded) {
-        this.loaded = false;
-        this.success = false;
-        this.errors = null;
-        await axios
-          .delete(`http://localhost/stage/public/api/home/listCode/delete/${id}`)
-          .then((response) => {
-            this.loaded = true;
-            Vue.set(this.isLoading, index, false);
-            this.success = "MESSAGGIO: " + response.data;
-            axios.get("http://localhost/stage/public/api/home/getCode").then((response) => {
-              this.products = response.data;
-              this.totalRows = this.products.length;
-              this.isLoading = false;
-            });
-          })
-          .catch((error) => {
-            this.loaded = true;
-            this.isLoading = false;
-            this.status = false;
-            this.errors = error.response.data.message;
-          });
-      }
-    },
+    // async submitUpdate(id, index) {
+    //   if (this.loaded) {
+    //     this.loaded = false;
+    //     this.success = false;
+    //     this.errors = false;
+    //     await axios
+    //       .put(
+    //         `http://localhost/stage/public/api/home/listCode/update/${id}`,
+    //         this.requestFields
+    //       )
+    //       .then((response) => {
+    //         this.requestFields = {};
+    //         this.loaded = true;
+    //         this.success = "MESSAGGIO: Modificato " + response.data;
+    //         Vue.set(this.showModal2, index, false);
+    //         axios.get("http://localhost/stage/public/api/home/getCode").then((response) => {
+    //           this.customers = response.data;
+    //           this.totalRows = this.customers.length;
+    //         });
+    //       })
+    //       .catch((error) => {
+    //         this.loaded = true;
+    //         this.status = false;
+    //         this.showModal2 = false;
+    //         this.errors = error.response.data.message;
+    //       });
+    //   }
+    // },
+    // async submitDelete(id, index) {
+    //   if (this.loaded) {
+    //     this.loaded = false;
+    //     this.success = false;
+    //     this.errors = null;
+    //     await axios
+    //       .delete(`http://localhost/stage/public/api/home/listCode/delete/${id}`)
+    //       .then((response) => {
+    //         this.loaded = true;
+    //         Vue.set(this.isLoading, index, false);
+    //         this.success = "MESSAGGIO: " + response.data;
+    //         axios.get("http://localhost/stage/public/api/home/getCode").then((response) => {
+    //           this.customers = response.data;
+    //           this.totalRows = this.customers.length;
+    //           this.isLoading = false;
+    //         });
+    //       })
+    //       .catch((error) => {
+    //         this.loaded = true;
+    //         this.isLoading = false;
+    //         this.status = false;
+    //         this.errors = error.response.data.message;
+    //       });
+    //   }
+    // },
   },
 };
 </script>
